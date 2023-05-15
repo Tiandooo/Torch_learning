@@ -5,6 +5,14 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor
 import cv2
 from matplotlib import pyplot as plt
+import os
+from custom import CustomDataset
+
+cust_data = CustomDataset(
+    label="data/labels.txt",
+    img_path="data/img"
+)
+
 training_data = datasets.FashionMNIST(
     root="data",
     download=False,
@@ -49,12 +57,29 @@ figure = plt.figure(figsize=(8, 8))
 #     plt.show()
 #     print(X,y)
 #     break
+img_path = "data/img"
+if not os.path.exists(img_path):
+    os.mkdir(img_path)
 
 for i in range(1, num_row * num_col + 1):
-    sample_idx = torch.randint(len(training_data), size=(1,)).item()
-    img, label = training_data[sample_idx]
+    sample_idx = torch.randint(len(cust_data), size=(1,)).item()
+    img, label = cust_data[sample_idx]
+    
     figure.add_subplot(num_row, num_col, i)
     plt.title(labels_map[label])
     plt.axis("off")
-    plt.imshow(img.squeeze(), cmap="gray")
+
+    # 方式1，# C x H x W  ---> H x W x C
+    img = img.transpose(0, 2).transpose(0, 1)
+    plt.imshow(img)
+    # 方式2，squeeze
+    # plt.imshow(img.squeeze(), cmap="gray")
+
+
+    # 保存图片和标签
+    # filename = os.path.join(img_path,"%04d" % i + ".jpg")
+    # print(filename)
+    # plt.imsave(filename, img.squeeze(),cmap="gray")
+    # with open("data/labels.txt", mode="a") as f:
+    #     f.write("%s\n" % label)
 plt.show()
