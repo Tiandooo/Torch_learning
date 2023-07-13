@@ -1,16 +1,43 @@
-# This is a sample Python script.
+import torch
+import torch.nn as nn
+from torch.utils.data import DataLoader
+from data.MNIST import MNIST
+from model.simple import SimpleNet
+from matplotlib import pyplot as plt
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+train_set = MNIST("data/train.csv")
+train_loader = DataLoader(train_set, batch_size=32)
+
+model = SimpleNet()
+loss_fn = nn.CrossEntropyLoss()
+optimzer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+
+def train():
+
+    for batch, (imgs, labels) in enumerate(train_loader):
+        size = len(train_set)
+        
+      
+        # print(imgs.shape, labels.shape)
+        
+        labels_pred = model(imgs)
+
+        
+        loss = loss_fn(labels_pred, labels)
+
+        
+        optimzer.zero_grad()
+        loss.backward()
+        optimzer.step()
+        if batch % 100 == 0:
+            loss, current = loss.item(), (batch + 1) * len(imgs)
+            print(f"loss:{loss:>7f}, [{current:>5d}/{size:>5d}]")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+
+train()

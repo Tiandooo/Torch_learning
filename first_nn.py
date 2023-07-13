@@ -42,6 +42,8 @@ model = FirstNN().to(device)
 def train(data_loader, model, loss_fn, optimizer):
     size = len(data_loader.dataset)
     for batch, (X, y) in enumerate(data_loader):
+        print(X.shape, y.shape, X.dtype, y.dtype)
+        break
         y_pred = model(X)
         # print(y)
         # print(y_pred)
@@ -76,7 +78,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 for e in range(epochs):
     print(f"Epoch {e+1}\n-------------------------")
     train(train_loader, model, loss_fn, optimizer)
-    test(test_loader, model, loss_fn)
+    # test(test_loader, model, loss_fn)
 print("Saving model... \n")
 torch.save(model.state_dict(), 'model1_weights.pth')
 print("Done!")
