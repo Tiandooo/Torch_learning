@@ -43,7 +43,7 @@ def train(data_loader, model, loss_fn, optimizer):
     size = len(data_loader.dataset)
     for batch, (X, y) in enumerate(data_loader):
         print(X.shape, y.shape, X.dtype, y.dtype)
-        break
+        
         y_pred = model(X)
         # print(y)
         # print(y_pred)
