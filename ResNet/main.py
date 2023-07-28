@@ -6,6 +6,8 @@ from data.MNISTT import MNISTT
 from model.simple import SimpleNet
 from model.FirstNN import FirstNN
 from matplotlib import pyplot as plt
+from model.tv_resnet import resnet18
+
 import csv
 batch_size = 32
 train_set = MNIST("data/train.csv")
@@ -14,7 +16,11 @@ train_loader = DataLoader(train_set, batch_size=batch_size)
 test_loader = DataLoader(test_set, batch_size=batch_size)
 epoch = 5
 
-model = SimpleNet()
+# model = SimpleNet()
+model = resnet18(pretrained=False)
+device = torch.device('cuda')
+model = model.to(device=device)
+
 loss_fn = nn.CrossEntropyLoss()
 optimzer = torch.optim.AdamW(model.parameters(), lr=1e-4)
 
@@ -22,7 +28,10 @@ def train():
 
     for batch, (imgs, labels) in enumerate(train_loader):
         size = len(train_set)
-        
+
+        # TO CUDA
+        imgs = imgs.to(device)
+        labels = labels.to(device)
       
         # print(imgs.shape, labels.shape)
         
